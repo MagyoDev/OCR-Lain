@@ -1,5 +1,4 @@
 from pathlib import Path
-from typing import Optional
 
 import typer
 from rich.console import Console
@@ -35,13 +34,28 @@ def run(
         "--lang",
         help="Idioma do OCR. Exemplo: por, eng ou por+eng.",
     ),
+    no_pdf_ocr: bool = typer.Option(
+        False,
+        "--no-pdf-ocr",
+        help="Desativa OCR em páginas de PDF escaneadas.",
+    ),
+    dpi: int = typer.Option(
+        200,
+        "--dpi",
+        help="Qualidade usada ao transformar páginas de PDF em imagem.",
+    ),
 ):
-
-    config = OCRConfig(language=lang)
+    config = OCRConfig(
+        language=lang,
+        dpi=dpi,
+        ocr_pdf_pages=not no_pdf_ocr,
+    )
 
     console.print("[bold cyan]OCR-Lain iniciado[/bold cyan]")
     console.print(f"Entrada: [bold]{input_path}[/bold]")
     console.print(f"Saída: [bold]{output_dir}[/bold]")
+    console.print(f"Idioma: [bold]{lang}[/bold]")
+    console.print(f"DPI: [bold]{dpi}[/bold]")
     console.print("")
 
     try:
@@ -75,9 +89,6 @@ def run(
 
 @app.command()
 def formats():
-    """
-    Lista os formatos suportados.
-    """
 
     console.print("[bold cyan]Formatos suportados nesta versão:[/bold cyan]")
 
