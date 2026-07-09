@@ -3,3 +3,4 @@ pytesseract
 typer
 rich
 pymupdf
+python-docx

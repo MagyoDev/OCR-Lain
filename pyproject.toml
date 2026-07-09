@@ -9,7 +9,8 @@ dependencies = [
     "pytesseract",
     "typer",
     "rich",
-    "pymupdf"
+    "pymupdf",
+    "python-docx"
 ]
 
 [project.scripts]

@@ -1,5 +1,0 @@
-pillow
-pytesseract
-typer
-rich
-pymupdf

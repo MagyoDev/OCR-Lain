@@ -39,6 +39,11 @@ def run(
         "--no-pdf-ocr",
         help="Desativa OCR em páginas de PDF escaneadas.",
     ),
+    no_embedded_images: bool = typer.Option(
+        False,
+        "--no-embedded-images",
+        help="Desativa OCR em imagens internas de documentos.",
+    ),
     dpi: int = typer.Option(
         200,
         "--dpi",
@@ -49,6 +54,7 @@ def run(
         language=lang,
         dpi=dpi,
         ocr_pdf_pages=not no_pdf_ocr,
+        ocr_embedded_images=not no_embedded_images,
     )
 
     console.print("[bold cyan]OCR-Lain iniciado[/bold cyan]")
@@ -56,6 +62,9 @@ def run(
     console.print(f"Saída: [bold]{output_dir}[/bold]")
     console.print(f"Idioma: [bold]{lang}[/bold]")
     console.print(f"DPI: [bold]{dpi}[/bold]")
+    console.print(
+        f"OCR em imagens internas: [bold]{not no_embedded_images}[/bold]"
+    )
     console.print("")
 
     try:

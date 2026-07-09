@@ -11,3 +11,5 @@ class OCRConfig:
     dpi: int = 200
     min_native_chars: int = 30
     ocr_pdf_pages: bool = True
+
+    ocr_embedded_images: bool = True

@@ -1,2 +1,0 @@
-[console_scripts]
-ocr-lain = ocr_lain.cli:app
