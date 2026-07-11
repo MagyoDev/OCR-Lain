@@ -15,7 +15,7 @@ dependencies = [
 ]
 
 [project.scripts]
-ocr-lain = "ocr_lain.cli:app"
+ocr-lain = "ocr_lain.cli:main"
 
 [build-system]
 requires = ["setuptools>=68"]

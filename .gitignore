@@ -5,6 +5,8 @@ __pycache__/
 build/
 dist/
 outputs/
+samples/*
+!samples/.gitkeep
 .env
 .DS_Store
 .vscode/
