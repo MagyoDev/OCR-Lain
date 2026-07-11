@@ -1,6 +1,57 @@
+import json
 from pathlib import Path
+from typing import Any
 
-from ocr_lain.models import ExtractResult
+from ocr_lain.models import ExtractedBlock, ExtractResult
+
+
+def block_to_dict(block: ExtractedBlock) -> dict[str, Any]:
+
+    return {
+        "source_file": block.source_file,
+        "source_type": block.source_type,
+        "location": block.location,
+        "method": block.method,
+        "text": block.text,
+        "metadata": block.metadata,
+    }
+
+
+def result_to_dict(result: ExtractResult) -> dict[str, Any]:
+
+    return {
+        "file_path": str(result.file_path),
+        "file_name": result.file_path.name,
+        "blocks_count": len(result.blocks),
+        "errors_count": len(result.errors),
+        "errors": result.errors,
+        "full_text": result.full_text,
+        "blocks": [
+            block_to_dict(block)
+            for block in result.blocks
+        ],
+    }
+
+
+def save_json(result: ExtractResult, output_dir: Path) -> Path:
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    original_name = result.file_path.name
+    output_file = output_dir / f"{original_name}.ocr.json"
+
+    data = result_to_dict(result)
+
+    output_file.write_text(
+        json.dumps(
+            data,
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    return output_file
 
 
 def save_markdown(result: ExtractResult, output_dir: Path) -> Path:
@@ -15,6 +66,10 @@ def save_markdown(result: ExtractResult, output_dir: Path) -> Path:
     lines.append(f"# OCR-Lain — Resultado de `{original_name}`")
     lines.append("")
     lines.append(f"**Arquivo original:** `{result.file_path}`")
+    lines.append("")
+    lines.append(f"**Total de blocos extraídos:** `{len(result.blocks)}`")
+    lines.append("")
+    lines.append(f"**Total de erros:** `{len(result.errors)}`")
     lines.append("")
     lines.append("---")
     lines.append("")

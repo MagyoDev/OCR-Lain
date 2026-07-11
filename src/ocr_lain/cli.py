@@ -6,7 +6,7 @@ from rich.table import Table
 
 from ocr_lain.config import OCRConfig
 from ocr_lain.core import extract_many
-from ocr_lain.outputs import save_markdown
+from ocr_lain.outputs import save_json, save_markdown
 from ocr_lain.router import SUPPORTED_EXTENSIONS
 
 app = typer.Typer(
@@ -49,7 +49,13 @@ def run(
         "--dpi",
         help="Qualidade usada ao transformar páginas de PDF em imagem.",
     ),
+    export_json: bool = typer.Option(
+        False,
+        "--json",
+        help="Também salva o resultado em JSON.",
+    ),
 ):
+
     config = OCRConfig(
         language=lang,
         dpi=dpi,
@@ -62,9 +68,9 @@ def run(
     console.print(f"Saída: [bold]{output_dir}[/bold]")
     console.print(f"Idioma: [bold]{lang}[/bold]")
     console.print(f"DPI: [bold]{dpi}[/bold]")
-    console.print(
-        f"OCR em imagens internas: [bold]{not no_embedded_images}[/bold]"
-    )
+    console.print(f"OCR em PDF: [bold]{not no_pdf_ocr}[/bold]")
+    console.print(f"OCR em imagens internas: [bold]{not no_embedded_images}[/bold]")
+    console.print(f"Exportar JSON: [bold]{export_json}[/bold]")
     console.print("")
 
     try:
@@ -78,16 +84,24 @@ def run(
     table.add_column("Arquivo")
     table.add_column("Blocos")
     table.add_column("Erros")
-    table.add_column("Saída")
+    table.add_column("Markdown")
+    table.add_column("JSON")
 
     for result in results:
-        output_file = save_markdown(result, output_dir)
+        markdown_file = save_markdown(result, output_dir)
+
+        json_file_text = "Não gerado"
+
+        if export_json:
+            json_file = save_json(result, output_dir)
+            json_file_text = str(json_file)
 
         table.add_row(
             result.file_path.name,
             str(len(result.blocks)),
             str(len(result.errors)),
-            str(output_file),
+            str(markdown_file),
+            json_file_text,
         )
 
     console.print(table)
