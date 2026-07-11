@@ -10,7 +10,8 @@ dependencies = [
     "typer",
     "rich",
     "pymupdf",
-    "python-docx"
+    "python-docx",
+    "python-pptx"
 ]
 
 [project.scripts]

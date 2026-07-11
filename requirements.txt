@@ -4,3 +4,4 @@ typer
 rich
 pymupdf
 python-docx
+python-pptx
